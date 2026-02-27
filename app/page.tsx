@@ -195,7 +195,7 @@ export default function LandingPage() {
           className="flex items-center gap-6"
         >
           <a
-            href="https://github.com/openclaw-investor"
+            href="https://github.com/konradbachowski/openclaw-investor"
             className="mono text-xs hover:text-white transition-colors"
             style={{ color: "var(--text-muted)" }}
             target="_blank"
@@ -331,6 +331,55 @@ export default function LandingPage() {
           ))}
         </div>
       </motion.section>
+
+      {/* Footer */}
+      <footer
+        className="relative px-8 py-5 flex items-center justify-between flex-wrap gap-4"
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.05)",
+          backgroundColor: "rgba(7,8,13,0.8)",
+          zIndex: 10,
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className="w-5 h-5 rounded flex items-center justify-center text-xs font-bold mono"
+            style={{ background: "var(--accent-gradient)", color: "#07080d", fontSize: "0.55rem" }}
+          >
+            OC
+          </div>
+          <span className="mono text-xs" style={{ color: "var(--text-muted)" }}>
+            OpenClaw Investor · Spark #1 Hackathon
+          </span>
+        </div>
+        <div className="flex items-center gap-5">
+          <a
+            href="https://heyneuron.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mono text-xs transition-colors hover:text-white"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            heyneuron.com ↗
+          </a>
+          <a
+            href="mailto:konrad@heyneuron.com"
+            className="mono text-xs transition-colors hover:text-white"
+            style={{ color: "var(--text-muted)" }}
+          >
+            konrad@heyneuron.com
+          </a>
+          <a
+            href="https://github.com/konradbachowski/openclaw-investor"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mono text-xs transition-colors hover:text-white"
+            style={{ color: "var(--text-muted)" }}
+          >
+            GitHub ↗
+          </a>
+        </div>
+      </footer>
     </main>
   );
 }
