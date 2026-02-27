@@ -1,67 +1,109 @@
-# Installing the `solana-connect` Skill
+# Setting up OpenClaw + Solana
 
-## Prerequisites
-
-- OpenClaw CLI installed: `npm install -g clawhub`
-- Node.js 18+
-- An OpenRouter API key
-
-## Installation
+## 1. Install OpenClaw
 
 ```bash
-# Install the solana-connect skill
-clawhub install solana-connect
-
-# Verify installation
-clawhub skills list
+npm install -g openclaw@latest
 ```
 
-## Configuration
-
-1. Set your OpenRouter API key:
-```bash
-export OPENROUTER_API_KEY=your_key_here
-```
-
-2. Copy the config template:
-```bash
-cp openclaw-config/openclaw.json ~/.clawhub/config.json
-```
-
-3. Edit `~/.clawhub/config.json` and update the `llm.model` field to your preferred model.
-
-## Starting the Gateway
+## 2. Onboard (first-time setup)
 
 ```bash
-# From the project root
-clawhub start
+# Interactive wizard
+openclaw onboard
 
-# The gateway will start at http://localhost:3001
-# The web app expects it at this address
+# Or with OpenRouter directly
+openclaw onboard \
+  --auth-choice apiKey \
+  --token-provider openrouter \
+  --token $OPENROUTER_API_KEY
 ```
 
-## Verifying the Connection
+This creates `~/.openclaw/openclaw.json`. Optionally copy the template from this repo:
 
-Once running, the AI chat sidebar in the investor dashboard will show the agent as connected. You can test by:
+```bash
+cp openclaw-config/openclaw.json ~/.openclaw/openclaw.json
+# then edit model/key
+```
 
-1. Opening the dashboard at `http://localhost:3000/dashboard`
-2. Clicking the AI Agent button (or the floating ◉ button)
-3. Typing "Analyze my portfolio"
+## 3. Install Solana skill
+
+**Option A — openclaw-solana-connect (recommended)**
+
+```bash
+git clone https://github.com/Seenfinity/openclaw-solana-connect.git
+cd openclaw-solana-connect && npm install
+```
+
+Configure env in `~/.openclaw/openclaw.json`:
+```json
+{
+  "env": {
+    "SOLANA_RPC_URL": "https://api.mainnet-beta.solana.com",
+    "OPENROUTER_API_KEY": "sk-or-..."
+  }
+}
+```
+
+**Option B — solana-skills via Playbooks**
+
+```bash
+npx playbooks add skill openclaw/skills --skill solana-skills
+```
+
+## 4. Start the gateway
+
+```bash
+openclaw gateway run
+# Gateway starts at http://127.0.0.1:18789
+```
+
+Keep running in background:
+```bash
+npm install -g pm2
+pm2 start "openclaw gateway run" --name openclaw
+pm2 save
+```
+
+## 5. Verify connection
+
+```bash
+openclaw doctor
+openclaw status
+```
+
+Check the web app at `http://localhost:3000/dashboard` — AI chat should respond with live analysis.
+
+## 6. Configure the web app
+
+Create `apps/openclaw-investor/.env.local`:
+
+```bash
+# OpenClaw gateway (default: http://127.0.0.1:18789)
+OPENCLAW_URL=http://127.0.0.1:18789
+
+# Gateway auth token (from openclaw doctor output)
+OPENCLAW_TOKEN=your_gateway_token_here
+
+# Optional: custom Solana RPC
+NEXT_PUBLIC_SOLANA_RPC=https://your-rpc.helius.xyz/?api-key=YOUR_KEY
+```
 
 ## Troubleshooting
 
-**Gateway not responding:** Check that port 3001 is not in use:
+**Port in use:**
 ```bash
-lsof -i :3001
+openclaw gateway run --port 18790 --force
+# then set OPENCLAW_URL=http://127.0.0.1:18790 in .env.local
 ```
 
-**solana-connect not found:**
+**Check logs:**
 ```bash
-clawhub update
-clawhub install solana-connect --force
+openclaw logs
 ```
 
-**RPC rate limiting:** The app uses the public Solana RPC by default. For production, configure a custom RPC in `openclaw.json`:
-```json
-"solanaRpc": "https://your-rpc.helius.xyz/?api-key=YOUR_KEY"
+**Reset gateway:**
+```bash
+openclaw reset
+openclaw gateway run
 ```

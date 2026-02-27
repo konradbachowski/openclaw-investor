@@ -51,18 +51,22 @@ The app works without OpenClaw — you get portfolio data but the AI chat shows 
 To enable full AI features:
 
 ```bash
-# Install OpenClaw CLI
-npm install -g clawhub
+# Install OpenClaw
+npm install -g openclaw@latest
 
-# Install the Solana skill
-clawhub install solana-connect
+# Onboard (connects to OpenRouter)
+openclaw onboard \
+  --auth-choice apiKey \
+  --token-provider openrouter \
+  --token $OPENROUTER_API_KEY
 
-# Set your OpenRouter key
-export OPENROUTER_API_KEY=your_key_here
+# Install Solana skill (Seenfinity)
+git clone https://github.com/Seenfinity/openclaw-solana-connect.git
+cd openclaw-solana-connect && npm install
 
 # Start the gateway
-clawhub start
-# Gateway runs at http://localhost:3001
+openclaw gateway run
+# Gateway starts at http://127.0.0.1:18789
 ```
 
 ### 4. Connect your wallet
@@ -77,8 +81,11 @@ Create `.env.local` for custom configuration:
 # Custom Solana RPC (recommended for production)
 NEXT_PUBLIC_SOLANA_RPC=https://your-rpc.helius.xyz/?api-key=YOUR_KEY
 
-# OpenClaw gateway URL (default: http://localhost:3001)
-OPENCLAW_URL=http://localhost:3001
+# OpenClaw gateway (default: http://127.0.0.1:18789)
+OPENCLAW_URL=http://127.0.0.1:18789
+
+# OpenClaw gateway auth token (from: openclaw doctor)
+OPENCLAW_TOKEN=your_token_here
 ```
 
 ## Tech Stack
