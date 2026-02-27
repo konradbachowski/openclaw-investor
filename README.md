@@ -99,7 +99,7 @@ OPENCLAW_URL=http://localhost:3001
 See [`openclaw-config/`](./openclaw-config/) for:
 
 - `openclaw.json` — gateway configuration template
-- `AGENTS.md` — system prompt and agent behavior guidelines
+- `agent-instructions.md` — system prompt and agent behavior guidelines
 - `skills/INSTALL.md` — step-by-step skill installation
 
 ## Hackathon Notes
